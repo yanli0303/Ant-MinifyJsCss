@@ -1,5 +1,5 @@
-# Minify (compress) JavaScript and CSS files #
-This is an Ant target with which you can minify (compress) JavaScript and CSS files in a specified directory recursively.
+# An Ant target for compressing JavaScript and CSS files #
+This is an [Ant](http://ant.apache.org/) target with which you can minify (compress) JavaScript and CSS files in a specified directory recursively.
 
 ## Usage ##
     ant -Dsrc="Home directory of your source files" minify
@@ -17,13 +17,13 @@ This is an Ant target with which you can minify (compress) JavaScript and CSS fi
 
 ## Vendors ##
 
-1. Google Closure Compiler:
-    - Version:        **v20130722**
-    - Release date:   **2013-07-22**
+1. [Google Closure Compiler](https://github.com/google/closure-compiler):
+    - Version:        v20130722
+    - Release date:   2013-07-22
     - License:        [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)
-2. Yahoo YUICompressor:
-	- Version:        **2.4.7**
-    - Release date:   **2013-05-15**
+2. [Yahoo YUI Compressor](http://yui.github.io/yuicompressor/):
+	- Version:        2.4.7
+    - Release date:   2013-05-15
     - License:        BSD
 
 ## License ##

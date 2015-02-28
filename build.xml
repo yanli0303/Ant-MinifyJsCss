@@ -20,6 +20,7 @@
                 <exclude name="yii/**" />
                 <exclude name="protected/runtime/**" />
                 <exclude name="protected/tests/**" />
+                <exclude name="node_modules/**" />
                 <exclude name="bower_components/**" />
                 <!-- present: exclude those *.js which has a corresponding *.min.js in same directory -->
                 <present targetdir="${src}" present="srconly">
@@ -45,6 +46,7 @@
                 <exclude name="yii/**" />
                 <exclude name="protected/runtime/**" />
                 <exclude name="protected/tests/**" />
+                <exclude name="node_modules/**" />
                 <exclude name="bower_components/**" />
                 <!-- present: exclude those *.css which has a corresponding *.min.css in same directory -->
                 <present targetdir="${src}" present="srconly">

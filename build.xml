@@ -1,7 +1,7 @@
 <project name="Minify JavaScript/CSS files" default="usage">
     <property name="file.closurecompiler" location="${basedir}/closurecompiler/compiler.jar" />
     <property name="file.yuicompressor" location="${basedir}/yuicompressor/yuicompressor-2.4.7.jar" />
-    <property name="src" location="${basedir}/../UsherNetwork/src" />
+    <property name="src" location="${basedir}/src" />
 
     <target name="minify">
         <echo message="Minifying JavaScript files..." />
@@ -16,10 +16,7 @@
             <fileset dir="${src}">
                 <include name="**/*.js" />
                 <exclude name="**/*.min.js" />
-                <exclude name="assets/**" />
-                <exclude name="yii/**" />
-                <exclude name="protected/runtime/**" />
-                <exclude name="protected/tests/**" />
+                <exclude name="node_modules/**" />
                 <exclude name="bower_components/**" />
                 <!-- present: exclude those *.js which has a corresponding *.min.js in same directory -->
                 <present targetdir="${src}" present="srconly">
@@ -41,10 +38,7 @@
             <fileset dir="${src}">
                 <include name="**/*.css" />
                 <exclude name="**/*.min.css" />
-                <exclude name="assets/**" />
-                <exclude name="yii/**" />
-                <exclude name="protected/runtime/**" />
-                <exclude name="protected/tests/**" />
+                <exclude name="node_modules/**" />
                 <exclude name="bower_components/**" />
                 <!-- present: exclude those *.css which has a corresponding *.min.css in same directory -->
                 <present targetdir="${src}" present="srconly">

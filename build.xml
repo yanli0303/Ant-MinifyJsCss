@@ -1,0 +1,61 @@
+<project name="Minify JavaScript/CSS files" default="usage">
+    <property name="file.closurecompiler" location="${basedir}/closurecompiler/compiler.jar" />
+    <property name="file.yuicompressor" location="${basedir}/yuicompressor/yuicompressor-2.4.7.jar" />
+    <property name="src" location="${basedir}/../UsherNetwork/src" />
+
+    <target name="minify">
+        <echo message="Minifying JavaScript files..." />
+        <apply executable="java" dir="${src}" relative="true" failonerror="true" type="file" verbose="true">
+            <env key="LANG" value="en_US.UTF-8" />
+            <arg value="-jar" />
+            <arg file="${file.closurecompiler}" />
+            <arg value="--js" />
+            <srcfile/>
+            <arg value="--js_output_file" />
+            <targetfile/>
+            <fileset dir="${src}">
+                <include name="**/*.js" />
+                <exclude name="**/*.min.js" />
+                <exclude name="assets/**" />
+                <exclude name="yii/**" />
+                <exclude name="protected/runtime/**" />
+                <exclude name="protected/tests/**" />
+                <exclude name="bower_components/**" />
+                <!-- present: exclude those *.js which has a corresponding *.min.js in same directory -->
+                <present targetdir="${src}" present="srconly">
+                    <mapper type="glob" from="*.js" to="*.min.js" />
+                </present>
+            </fileset>
+            <mapper type="glob" from="*.js" to="*.min.js" />
+        </apply>
+        <echo message="Minifying CSS files..." />
+        <apply executable="java" dir="${src}" relative="true" failonerror="true" type="file" verbose="true">
+            <env key="LANG" value="en_US.UTF-8" />
+            <arg value="-jar" />
+            <arg file="${file.yuicompressor}" />
+            <srcfile/>
+            <arg line="--type css" />
+            <arg line="--charset utf-8" />
+            <arg value="-o" />
+            <targetfile/>
+            <fileset dir="${src}">
+                <include name="**/*.css" />
+                <exclude name="**/*.min.css" />
+                <exclude name="assets/**" />
+                <exclude name="yii/**" />
+                <exclude name="protected/runtime/**" />
+                <exclude name="protected/tests/**" />
+                <exclude name="bower_components/**" />
+                <!-- present: exclude those *.css which has a corresponding *.min.css in same directory -->
+                <present targetdir="${src}" present="srconly">
+                    <mapper type="glob" from="*.css" to="*.min.css" />
+                </present>
+            </fileset>
+            <mapper type="glob" from="*.css" to="*.min.css" />
+        </apply>
+    </target>
+
+    <target name="usage" description=": Information on how to use this Ant script">
+        <echo message="ant -Dsrc=&quot;Home directory of your source files&quot; minify" />
+    </target>
+</project>

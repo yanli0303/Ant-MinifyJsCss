@@ -23,7 +23,7 @@ This is an [Ant](http://ant.apache.org/) target with which you can minify (compr
     - Release date:   2015-01-27
     - License:        [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 2. [Yahoo YUI Compressor](http://yui.github.io/yuicompressor/):
-	- Version:        2.4.7 (v2.4.8 has issue on windows, see [Unable to specify absolute path for output file](https://github.com/yui/yuicompressor/issues/78))
+	- Version:        2.4.7 (v2.4.8 has an issue on windows, see [Unable to specify absolute path for output file](https://github.com/yui/yuicompressor/issues/78))
     - Release date:   2013-05-15
     - License:        BSD
 

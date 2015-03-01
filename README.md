@@ -13,12 +13,14 @@ This is an [Ant](http://ant.apache.org/) target with which you can minify (compr
 	- Extension of minified JavaScript files will be **.min.js**
     - JavaScript files will be minified with [Google Closure Compiler](https://github.com/google/closure-compiler)
 3. The minified files will be put in the same directory of unminified file
+4. If the minified version already exists, it won't be overwritten
+5. By default, ignore the JavaScript and CSS files in both **node_modules** and **bower_components**
 
 ## Vendors ##
 
 1. [Google Closure Compiler](https://github.com/google/closure-compiler):
-    - Version:        v20130722
-    - Release date:   2013-07-22
+    - Version:        v20150126
+    - Release date:   2015-01-27
     - License:        [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 2. [Yahoo YUI Compressor](http://yui.github.io/yuicompressor/):
 	- Version:        2.4.7

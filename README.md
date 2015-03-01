@@ -13,7 +13,6 @@ This is an [Ant](http://ant.apache.org/) target with which you can minify (compr
 	- Extension of minified JavaScript files will be **.min.js**
     - JavaScript files will be minified with [Google Closure Compiler](https://github.com/google/closure-compiler)
 3. The minified files will be put in the same directory of unminified file
-4. Existing minified files will be overridden
 
 ## Vendors ##
 

@@ -10,7 +10,14 @@
         </classpath>
     </taskdef>
 
-    <target name="minify">
+    <target name="get-cpu-cores">
+        <javac includeAntRuntime="true" srcdir="src" destdir="src"/>
+        <taskdef name="getCpuCores" classname="GetCpuCores" classpath="src"/>
+        <getCpuCores outputProperty="cpu.cores"/>
+        <echo message="Number of CPU cores: ${cpu.cores}"/>
+    </target>
+
+    <target name="minify" depends="get-cpu-cores">
         <fileset id="js.files" dir="${src}">
             <include name="**/*.js" />
             <exclude name="**/*.min.js" />
@@ -26,13 +33,13 @@
             <fileset refid="js.files" />
         </resourcecount>
 
-        <echo message="Minifying ${js.files.count} JavaScript file(s)..." />
-        <for parallel="true" threadCount="2" keepgoing="false" param="fileToMinify">
+        <echo message="Totally ${js.files.count} JavaScript file(s) to minify..." />
+        <for parallel="true" threadCount="${cpu.cores}" keepgoing="false" param="fileToMinify">
             <path>
                 <fileset refid="js.files" />
             </path>
             <sequential>
-                <echo message="Processing @{fileToMinify}" />
+                <echo message="Minifying @{fileToMinify}" />
                 <apply executable="java" failonerror="true" type="file">
                     <!-- Recommended JVM command line options, see https://github.com/google/closure-compiler/wiki/FAQ#what-are-the-recommended-java-vm-command-line-options -->
                     <arg value="-server" />
@@ -64,13 +71,13 @@
             <fileset refid="css.files" />
         </resourcecount>
 
-        <echo message="Minifying CSS files..." />
-        <for parallel="true" threadCount="2" keepgoing="false" param="fileToMinify">
+        <echo message="Totally ${css.files.count} CSS file(s) to minify..." />
+        <for parallel="true" threadCount="${cpu.cores}" keepgoing="false" param="fileToMinify">
             <path>
                 <fileset refid="css.files" />
             </path>
             <sequential>
-                <echo message="Processing @{fileToMinify}" />
+                <echo message="Minifying @{fileToMinify}" />
                 <apply executable="java" failonerror="true" type="file">
                     <arg value="-jar" />
                     <arg file="${file.yuicompressor}" />

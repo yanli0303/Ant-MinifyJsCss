@@ -1,8 +1,8 @@
 # An Ant target for compressing JavaScript and CSS files #
 
-*By [Yan Li](https://github.com/yanli0303)*
+*By [Yan Li](https://github.microstrategy.com/yali)*
 
-[![License](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://github.com/yanli0303/Ant-MinifyJsCss/blob/master/LICENSE.md)
+[![License](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://github.microstrategy.com/yali/Ant-MinifyJsCss/blob/master/LICENSE.md)
 [![PayPayl donate button](http://img.shields.io/badge/paypal-donate-orange.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=silentwait4u%40gmail%2ecom&lc=US&item_name=Yan%20Li&no_note=0&currency_code=USD&bn=PP%2dDonationsBF%3apaypal%2ddonate%2ejpg%3aNonHostedGuest)
 
 This is an [Ant](http://ant.apache.org/) target with which you can minify (compress) JavaScript and CSS files in a specified directory recursively.
@@ -20,7 +20,13 @@ This is an [Ant](http://ant.apache.org/) target with which you can minify (compr
     - JavaScript files will be minified with [Google Closure Compiler](https://github.com/google/closure-compiler)
 3. The minified files will be put in the same directory of unminified file
 4. If the minified version already exists, it won't be overwritten
-5. By default, ignore the JavaScript and CSS files in both **node_modules** and **bower_components**
+5. By default, ignore the JavaScript and CSS files in directories named:
+    - node_modules
+    - bower_components
+    - assets
+    - yii
+    - protected/runtime
+    - protected/tests
 6. If you have a [multi-core processor](https://en.wikipedia.org/wiki/Multi-core_processor), your JavaScript and CSS files will be minified concurrently
 
 ## Vendors ##

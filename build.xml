@@ -1,60 +1,104 @@
 <project name="Minify JavaScript/CSS files" default="usage">
-    <property name="file.closurecompiler" location="${basedir}/closurecompiler/compiler.jar" />
-    <property name="file.yuicompressor" location="${basedir}/yuicompressor/yuicompressor-2.4.7.jar" />
-    <property name="src" location="${basedir}/../UsherNetwork/src" />
+    <property name="file.closurecompiler" location="${basedir}/lib/closurecompiler/compiler.jar" />
+    <property name="file.yuicompressor" location="${basedir}/lib/yuicompressor/yuicompressor-2.4.7.jar" />
+    <property name="file.antcontrib" location="${basedir}/lib/ant-contrib/ant-contrib-1.0b3.jar" />
+    <property name="src" location="${basedir}/src" />
 
-    <target name="minify">
-        <echo message="Minifying JavaScript files..." />
-        <apply executable="java" dir="${src}" relative="true" failonerror="true" type="file" verbose="true">
-            <env key="LANG" value="en_US.UTF-8" />
-            <arg value="-jar" />
-            <arg file="${file.closurecompiler}" />
-            <arg value="--js" />
-            <srcfile/>
-            <arg value="--js_output_file" />
-            <targetfile/>
-            <fileset dir="${src}">
-                <include name="**/*.js" />
-                <exclude name="**/*.min.js" />
-                <exclude name="assets/**" />
-                <exclude name="yii/**" />
-                <exclude name="protected/runtime/**" />
-                <exclude name="protected/tests/**" />
-                <exclude name="node_modules/**" />
-                <exclude name="bower_components/**" />
-                <!-- present: exclude those *.js which has a corresponding *.min.js in same directory -->
-                <present targetdir="${src}" present="srconly">
+    <taskdef resource="net/sf/antcontrib/antlib.xml">
+        <classpath>
+            <pathelement location="${file.antcontrib}" />
+        </classpath>
+    </taskdef>
+
+    <target name="get-cpu-cores">
+        <javac includeAntRuntime="true" srcdir="src" destdir="src"/>
+        <taskdef name="getCpuCores" classname="GetCpuCores" classpath="src"/>
+        <getCpuCores outputProperty="cpu.cores"/>
+        <echo message="Number of CPU cores: ${cpu.cores}"/>
+    </target>
+
+    <target name="minify" depends="get-cpu-cores">
+        <fileset id="js.files" dir="${src}">
+            <include name="**/*.js" />
+            <exclude name="**/*.min.js" />
+            <exclude name="node_modules/**" />
+            <exclude name="bower_components/**" />
+            <exclude name="assets/**" />
+            <exclude name="yii/**" />
+            <exclude name="protected/runtime/**" />
+            <exclude name="protected/tests/**" />
+            <!-- present: exclude those *.js which has a corresponding *.min.js in same directory -->
+            <present targetdir="${src}" present="srconly">
+                <mapper type="glob" from="*.js" to="*.min.js" />
+            </present>
+        </fileset>
+
+        <resourcecount property="js.files.count">
+            <fileset refid="js.files" />
+        </resourcecount>
+
+        <echo message="Totally ${js.files.count} JavaScript file(s) to minify..." />
+        <for parallel="true" threadCount="${cpu.cores}" keepgoing="false" param="fileToMinify">
+            <path>
+                <fileset refid="js.files" />
+            </path>
+            <sequential>
+                <echo message="Minifying @{fileToMinify}" />
+                <apply executable="java" failonerror="true" type="file">
+                    <!-- Recommended JVM command line options, see https://github.com/google/closure-compiler/wiki/FAQ#what-are-the-recommended-java-vm-command-line-options -->
+                    <arg value="-server" />
+                    <arg value="-XX:+TieredCompilation" />
+                    <arg value="-jar" />
+                    <arg file="${file.closurecompiler}" />
+                    <arg value="--js" />
+                    <srcfile/>
+                    <arg value="--js_output_file" />
+                    <targetfile/>
+                    <filelist files="@{fileToMinify}" />
                     <mapper type="glob" from="*.js" to="*.min.js" />
-                </present>
-            </fileset>
-            <mapper type="glob" from="*.js" to="*.min.js" />
-        </apply>
-        <echo message="Minifying CSS files..." />
-        <apply executable="java" dir="${src}" relative="true" failonerror="true" type="file" verbose="true">
-            <env key="LANG" value="en_US.UTF-8" />
-            <arg value="-jar" />
-            <arg file="${file.yuicompressor}" />
-            <srcfile/>
-            <arg line="--type css" />
-            <arg line="--charset utf-8" />
-            <arg value="-o" />
-            <targetfile/>
-            <fileset dir="${src}">
-                <include name="**/*.css" />
-                <exclude name="**/*.min.css" />
-                <exclude name="assets/**" />
-                <exclude name="yii/**" />
-                <exclude name="protected/runtime/**" />
-                <exclude name="protected/tests/**" />
-                <exclude name="node_modules/**" />
-                <exclude name="bower_components/**" />
-                <!-- present: exclude those *.css which has a corresponding *.min.css in same directory -->
-                <present targetdir="${src}" present="srconly">
+                </apply>
+            </sequential>
+        </for>
+
+        <fileset id="css.files" dir="${src}">
+            <include name="**/*.css" />
+            <exclude name="**/*.min.css" />
+            <exclude name="node_modules/**" />
+            <exclude name="bower_components/**" />
+            <exclude name="assets/**" />
+            <exclude name="yii/**" />
+            <exclude name="protected/runtime/**" />
+            <exclude name="protected/tests/**" />
+            <!-- present: exclude those *.css which has a corresponding *.min.css in same directory -->
+            <present targetdir="${src}" present="srconly">
+                <mapper type="glob" from="*.css" to="*.min.css" />
+            </present>
+        </fileset>
+
+        <resourcecount property="css.files.count">
+            <fileset refid="css.files" />
+        </resourcecount>
+
+        <echo message="Totally ${css.files.count} CSS file(s) to minify..." />
+        <for parallel="true" threadCount="${cpu.cores}" keepgoing="false" param="fileToMinify">
+            <path>
+                <fileset refid="css.files" />
+            </path>
+            <sequential>
+                <echo message="Minifying @{fileToMinify}" />
+                <apply executable="java" failonerror="true" type="file">
+                    <arg value="-jar" />
+                    <arg file="${file.yuicompressor}" />
+                    <srcfile/>
+                    <arg line="--type css" />
+                    <arg line="--charset utf-8" />
+                    <arg value="-o" />
+                    <targetfile/>
+                    <filelist files="@{fileToMinify}" />
                     <mapper type="glob" from="*.css" to="*.min.css" />
-                </present>
-            </fileset>
-            <mapper type="glob" from="*.css" to="*.min.css" />
-        </apply>
+                </apply>
+            </sequential>
+        </for>
     </target>
 
     <target name="usage" description=": Information on how to use this Ant script">

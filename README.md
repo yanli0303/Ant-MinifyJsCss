@@ -1,4 +1,10 @@
 # An Ant target for compressing JavaScript and CSS files #
+
+*By [Yan Li](https://github.com/yanli0303)*
+
+[![License](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://packagist.org/packages/yanli0303/yii-minify-client-script)
+[![PayPayl donate button](http://img.shields.io/badge/paypal-donate-orange.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=silentwait4u%40gmail%2ecom&lc=US&item_name=Yan%20Li&no_note=0&currency_code=USD&bn=PP%2dDonationsBF%3apaypal%2ddonate%2ejpg%3aNonHostedGuest)
+
 This is an [Ant](http://ant.apache.org/) target with which you can minify (compress) JavaScript and CSS files in a specified directory recursively.
 
 ## Usage ##
@@ -13,18 +19,16 @@ This is an [Ant](http://ant.apache.org/) target with which you can minify (compr
 	- Extension of minified JavaScript files will be **.min.js**
     - JavaScript files will be minified with [Google Closure Compiler](https://github.com/google/closure-compiler)
 3. The minified files will be put in the same directory of unminified file
-4. Existing minified files will be overridden
+4. If the minified version already exists, it won't be overwritten
+5. By default, ignore the JavaScript and CSS files in both **node_modules** and **bower_components**
 
 ## Vendors ##
 
 1. [Google Closure Compiler](https://github.com/google/closure-compiler):
-    - Version:        v20130722
-    - Release date:   2013-07-22
-    - License:        [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+    - Version:        v20150901
+    - Release date:   2015-09-02
+    - License:        [Apache License 2.0](https://github.com/google/closure-compiler#closure-compiler-license)
 2. [Yahoo YUI Compressor](http://yui.github.io/yuicompressor/):
-	- Version:        2.4.7
+	- Version:        2.4.7 (v2.4.8 has an issue on windows, see [Unable to specify absolute path for output file](https://github.com/yui/yuicompressor/issues/78))
     - Release date:   2013-05-15
-    - License:        BSD
-
-## License ##
-MIT
+    - License:        [BSD](https://github.com/yui/yuicompressor/blob/master/LICENSE.TXT)

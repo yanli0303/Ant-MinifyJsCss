@@ -3,6 +3,9 @@
     <property name="file.yuicompressor" location="${basedir}/lib/yuicompressor/yuicompressor-2.4.7.jar" />
     <property name="file.antcontrib" location="${basedir}/lib/ant-contrib/ant-contrib-1.0b3.jar" />
     <property name="src" location="${basedir}/src" />
+    <property name="force" value="false" />
+    <property name="cache.js.properties" location="${basedir}/cache.js.properties" />
+    <property name="cache.css.properties" location="${basedir}/cache.css.properties" />
 
     <taskdef resource="net/sf/antcontrib/antlib.xml">
         <classpath>
@@ -17,30 +20,39 @@
         <echo message="Number of CPU cores: ${cpu.cores}"/>
     </target>
 
-    <target name="minify" depends="get-cpu-cores">
-        <fileset id="js.files" dir="${src}">
-            <include name="**/*.js" />
-            <exclude name="**/*.min.js" />
-            <exclude name="node_modules/**" />
-            <exclude name="bower_components/**" />
-            <exclude name="assets/**" />
-            <exclude name="yii/**" />
-            <exclude name="protected/runtime/**" />
-            <exclude name="protected/tests/**" />
-            <!-- present: exclude those *.js which has a corresponding *.min.js in same directory -->
-            <present targetdir="${src}" present="srconly">
-                <mapper type="glob" from="*.js" to="*.min.js" />
-            </present>
-        </fileset>
+    <!-- Define property named "force.true" if property "force" is "true" -->
+    <target name="parse-if-force">
+        <condition property="force.true">
+            <equals arg1="${force}" arg2="true" />
+        </condition>
+    </target>
 
-        <resourcecount property="js.files.count">
-            <fileset refid="js.files" />
-        </resourcecount>
+    <!-- Delete cache files when "force.true" is defined -->
+    <target name="clear-cache-if-force" if="force.true" depends="parse-if-force">
+        <echo message="&quot;force&quot; option has been turned on, all existing JavaScript and CSS files will be minified." />
+        <delete file="${cache.js.properties}" verbose="true" quiet="true" />
+        <delete file="${cache.css.properties}" verbose="true" quiet="true" />
+    </target>
 
-        <echo message="Totally ${js.files.count} JavaScript file(s) to minify..." />
+    <target name="minify" depends="get-cpu-cores,clear-cache-if-force">
         <for parallel="true" threadCount="${cpu.cores}" keepgoing="false" param="fileToMinify">
             <path>
-                <fileset refid="js.files" />
+                <fileset id="js.files" dir="${src}">
+                    <include name="**/*.js" />
+                    <exclude name="**/*.min.js" />
+                    <exclude name="node_modules/**" />
+                    <exclude name="bower_components/**" />
+                    <exclude name="assets/**" />
+                    <exclude name="yii/**" />
+                    <exclude name="protected/runtime/**" />
+                    <exclude name="protected/tests/**" />
+                    <!-- See https://ant.apache.org/manual/Types/selectors.html#modified
+                         Includes only changed file. Use MD5 of file content to determine whether the file has changed. -->
+                    <modified algorithm="digest" cache="propertyfile" comparator="equal" update="true">
+                        <param name="cache.cachefile"     value="${cache.js.properties}"/>
+                        <param name="algorithm.algorithm" value="MD5"/>
+                    </modified>
+                </fileset>
             </path>
             <sequential>
                 <echo message="Minifying @{fileToMinify}" />
@@ -60,29 +72,24 @@
             </sequential>
         </for>
 
-        <fileset id="css.files" dir="${src}">
-            <include name="**/*.css" />
-            <exclude name="**/*.min.css" />
-            <exclude name="node_modules/**" />
-            <exclude name="bower_components/**" />
-            <exclude name="assets/**" />
-            <exclude name="yii/**" />
-            <exclude name="protected/runtime/**" />
-            <exclude name="protected/tests/**" />
-            <!-- present: exclude those *.css which has a corresponding *.min.css in same directory -->
-            <present targetdir="${src}" present="srconly">
-                <mapper type="glob" from="*.css" to="*.min.css" />
-            </present>
-        </fileset>
-
-        <resourcecount property="css.files.count">
-            <fileset refid="css.files" />
-        </resourcecount>
-
-        <echo message="Totally ${css.files.count} CSS file(s) to minify..." />
         <for parallel="true" threadCount="${cpu.cores}" keepgoing="false" param="fileToMinify">
             <path>
-                <fileset refid="css.files" />
+                <fileset id="css.files" dir="${src}">
+                    <include name="**/*.css" />
+                    <exclude name="**/*.min.css" />
+                    <exclude name="node_modules/**" />
+                    <exclude name="bower_components/**" />
+                    <exclude name="assets/**" />
+                    <exclude name="yii/**" />
+                    <exclude name="protected/runtime/**" />
+                    <exclude name="protected/tests/**" />
+                    <!-- See https://ant.apache.org/manual/Types/selectors.html#modified
+                         Includes only changed file. Use MD5 of file content to determine whether the file has changed. -->
+                    <modified algorithm="digest" cache="propertyfile" comparator="equal" update="true">
+                        <param name="cache.cachefile"     value="${cache.css.properties}"/>
+                        <param name="algorithm.algorithm" value="MD5"/>
+                    </modified>
+                </fileset>
             </path>
             <sequential>
                 <echo message="Minifying @{fileToMinify}" />
@@ -102,6 +109,6 @@
     </target>
 
     <target name="usage" description=": Information on how to use this Ant script">
-        <echo message="ant -Dsrc=&quot;Home directory of your source files&quot; minify" />
+        <echo message="ant [-Dforce=true] -Dsrc=&quot;Home directory of your source files&quot; minify" />
     </target>
 </project>

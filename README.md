@@ -1,9 +1,9 @@
-# An Ant target for compressing JavaScript and CSS files #
+# Ant-MinifyJsCss
 
 [![License](https://img.shields.io/badge/License-MIT-brightgreen.svg)](LICENSE.md)
 [![PayPayl donate button](http://img.shields.io/badge/paypal-donate-orange.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=silentwait4u%40gmail%2ecom&lc=US&item_name=Yan%20Li&no_note=0&currency_code=USD&bn=PP%2dDonationsBF%3apaypal%2ddonate%2ejpg%3aNonHostedGuest)
 
-This is an [Ant](http://ant.apache.org/) target with which you can minify (compress) JavaScript and CSS files in a specified directory recursively.
+This is an [Apache Ant](https://ant.apache.org/) project with which you can minify (compress) JavaScript and CSS files in a specified directory recursively.
 
 ## Usage ##
     ant -Dsrc="Home directory of your source files" minify
@@ -34,4 +34,5 @@ This is an [Ant](http://ant.apache.org/) target with which you can minify (compr
 3. [ANT Contrib](http://ant-contrib.sourceforge.net/)
     - Version:        1.0b3
     - Release date:   2006-11-02
-    - License:        [Apache License 2.0](https://github.com/google/closure-compiler#closure-compiler-license)
+    - License:        [Apache Software License, Version 1.1](lib/ant-contrib/docs/LICENSE.txt)
+    - This product includes software developed by the Ant-Contrib project (http://sourceforge.net/projects/ant-contrib).
